@@ -32,3 +32,9 @@ PGSQL_PASSWORD=password
 PGSQL_DB=database
 
 ```
+
+## 4. Ejecutar el entorno virtual y el archivo app.py
+```bash
+.\env\Scripts\activate
+python .\src\app.py
+```
