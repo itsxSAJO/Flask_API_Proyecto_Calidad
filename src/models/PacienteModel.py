@@ -11,12 +11,12 @@ class PacienteModel:
             pacientes = []
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT nui, nui_terapeuta, nombre, apellido, edad, direccion, estado FROM paciente ORDER BY apellido ASC")
+                    "SELECT id, id_terapeuta, nui, nombre, apellido, edad, direccion, estado FROM paciente ORDER BY apellido ASC")
                 resultset = cursor.fetchall()
 
                 for row in resultset:
                     paciente = Paciente(
-                        row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                        row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     pacientes.append(paciente.to_JSON())
             connection.close()
             return pacientes
@@ -24,17 +24,17 @@ class PacienteModel:
             raise Exception(ex)
 
     @classmethod
-    def get_paciente(self, nui):
+    def get_paciente(self, id):
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT nui, nui_terapeuta, nombre, apellido, edad, direccion, estado FROM paciente WHERE nui = %s", (nui,))
+                    "SELECT id, id_terapeuta, nui, nombre, apellido, edad, direccion, estado FROM paciente WHERE id = %s", (id,))
                 row = cursor.fetchone()
                 paciente = None
                 if row != None:
                     paciente = Paciente(
-                        row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+                        row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
                     paciente = paciente.to_JSON()
             connection.close()
             return paciente
@@ -46,8 +46,8 @@ class PacienteModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO paciente (nui, nui_terapeuta, nombre, apellido, edad, direccion, estado) VALUES (%s,%s, %s, %s, %s, %s, %s)", (
-                    paciente.nui, paciente.nui_terapeuta, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion, paciente.estado))
+                cursor.execute("INSERT INTO paciente (id_terapeuta, nui, nombre, apellido, edad, direccion, estado) VALUES (%s,%s, %s, %s, %s, %s, %s)", (
+                    paciente.id_terapeuta, paciente.nui, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion, paciente.estado))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -60,8 +60,8 @@ class PacienteModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE paciente SET nui_terapeuta = %s, nombre = %s, apellido = %s, edad = %s, direccion = %s, estado = %s WHERE nui = %s", (
-                    paciente.nui_terapeuta, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion, paciente.estado, paciente.nui))
+                cursor.execute("UPDATE paciente SET id_terapeuta = %s, nui = %s, nombre = %s, apellido = %s, edad = %s, direccion = %s, estado = %s WHERE id = %s", (
+                    paciente.id_terapeuta,paciente.nui, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion, paciente.estado, paciente.id))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -74,7 +74,21 @@ class PacienteModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM paciente WHERE nui = %s", (paciente.nui,))
+                cursor.execute("DELETE FROM paciente WHERE id = %s", (paciente.id,))
+                affected_rows = cursor.rowcount
+                connection.commit()
+            connection.close()
+            return affected_rows
+        except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
+    def update_state_paciente(self, paciente):
+        try:
+            connection = get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE paciente SET estado = %s WHERE id = %s", (
+                    paciente.estado, paciente.id))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()

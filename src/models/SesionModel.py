@@ -9,7 +9,7 @@ class SesionModel:
             connection = get_connection()
             sesiones = []
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id_intento, nui_paciente, fecha, duracion, puntaje FROM sesion ORDER BY id_intento ASC")  
+                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje FROM sesion ORDER BY id_intento ASC")  
                 resultset = cursor.fetchall()
                 
                 for row in resultset:
@@ -25,7 +25,7 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id_intento, nui_paciente, fecha, duracion, puntaje FROM sesion WHERE id_intento = %s", (id_intento,))  
+                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje FROM sesion WHERE id_intento = %s", (id_intento,))  
                 row = cursor.fetchone()
                 sesion=None
                 if row != None:
@@ -41,7 +41,7 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO sesion (nui_paciente, fecha, duracion, puntaje) VALUES (%s, %s, %s, %s)", (sesion.nui_paciente, sesion.fecha, sesion.duracion, sesion.puntaje))  
+                cursor.execute("INSERT INTO sesion (id_paciente, fecha, duracion, puntaje) VALUES (%s, %s, %s, %s)", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje))  
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -54,7 +54,7 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE sesion SET nui_paciente = %s, fecha = %s, duracion = %s, puntaje = %s WHERE id_intento = %s", (sesion.nui_paciente, sesion.fecha, sesion.duracion, sesion.puntaje, sesion.id_intento)) 
+                cursor.execute("UPDATE sesion SET id_paciente = %s, fecha = %s, duracion = %s, puntaje = %s WHERE id_intento = %s", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje, sesion.id_intento)) 
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -63,7 +63,7 @@ class SesionModel:
             raise Exception(ex)
         
     @classmethod
-    def delete_sesion(self, sesion):
+    def delete_sesion(cls, sesion):
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
@@ -73,4 +73,4 @@ class SesionModel:
             connection.close()
             return affected_rows
         except Exception as ex:
-            raise Exception(ex)
+            raise ValueError("Error deleting session") from ex

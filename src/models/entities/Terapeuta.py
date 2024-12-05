@@ -1,6 +1,7 @@
 class Terapeuta():
     
-    def __init__(self, nui=None, nombre=None, apellido=None, especialidad=None, estado=True) -> None:
+    def __init__(self, id, nui=None, nombre=None, apellido=None, especialidad=None, estado=True) -> None:
+        self.id = id
         self.nui = nui
         self.nombre = nombre
         self.apellido = apellido
@@ -8,7 +9,8 @@ class Terapeuta():
         self.estado = estado
     
     def to_JSON(self):
-        return {    
+        return {  
+            'id': self.id,  
             'nui': self.nui,
             'nombre': self.nombre,
             'apellido': self.apellido,

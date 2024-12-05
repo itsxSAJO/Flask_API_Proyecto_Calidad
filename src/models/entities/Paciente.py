@@ -1,8 +1,9 @@
 class Paciente():
     
-    def __init__(self, nui=None, nui_terapeuta=None, nombre=None, apellido=None, edad=None, direccion=None, estado=True) -> None:
+    def __init__(self, id, id_terapeuta=None, nui=None, nombre=None, apellido=None, edad=None, direccion=None, estado=True) -> None:
+        self.id = id
+        self.id_terapeuta = id_terapeuta
         self.nui = nui
-        self.nui_terapeuta = nui_terapeuta
         self.nombre = nombre
         self.apellido = apellido
         self.edad = edad
@@ -11,8 +12,9 @@ class Paciente():
         
     def to_JSON(self):  
         return {
+            'id': self.id,
+            'id_terapeuta': self.id_terapeuta,
             'nui': self.nui,
-            'nui_terapeuta': self.nui_terapeuta,
             'nombre': self.nombre,
             'apellido': self.apellido,
             'edad': self.edad,
