@@ -16,6 +16,7 @@ Para instalar los paquetes necesarios, ejecuta:
 
 ```bash
 pip install -r requirements.txt
+pip install flask flask-cors psycopg2 python-decouple python-dotenv 
 ```
 
 ## 3. Crear un archivo .env
