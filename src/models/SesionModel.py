@@ -9,11 +9,11 @@ class SesionModel:
             connection = get_connection()
             sesiones = []
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje FROM sesion ORDER BY id_intento ASC")  
+                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje, aciertos, errores FROM sesion ORDER BY id_intento ASC")  
                 resultset = cursor.fetchall()
                 
                 for row in resultset:
-                    sesion = Sesion(row[0], row[1], row[2], str(row[3]), row[4])
+                    sesion = Sesion(row[0], row[1], row[2], str(row[3]), row[4], row[5], row[6])
                     sesiones.append(sesion.to_JSON())  
             connection.close()
             return sesiones
@@ -25,11 +25,11 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje FROM sesion WHERE id_intento = %s", (id_intento,))  
+                cursor.execute("SELECT id_intento, id_paciente, fecha, duracion, puntaje, aciertos, errores FROM sesion WHERE id_intento = %s", (id_intento,))  
                 row = cursor.fetchone()
                 sesion=None
                 if row != None:
-                    sesion = Sesion(row[0], row[1], row[2], str(row[3]), row[4]) 
+                    sesion = Sesion(row[0], row[1], row[2], str(row[3]), row[4], row[5], row[6]) 
                     sesion = sesion.to_JSON()
             connection.close()
             return sesion
@@ -41,7 +41,7 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO sesion (id_paciente, fecha, duracion, puntaje) VALUES (%s, %s, %s, %s)", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje))  
+                cursor.execute("INSERT INTO sesion (id_paciente, fecha, duracion, puntaje, aciertos, errores) VALUES (%s, %s, %s, %s,%s, %s)", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje, sesion.aciertos, sesion.errores))  
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -54,7 +54,7 @@ class SesionModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE sesion SET id_paciente = %s, fecha = %s, duracion = %s, puntaje = %s WHERE id_intento = %s", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje, sesion.id_intento)) 
+                cursor.execute("UPDATE sesion SET id_paciente = %s, fecha = %s, duracion = %s, puntaje = %s, aciertos = %s, errores = %s WHERE id_intento = %s", (sesion.id_paciente, sesion.fecha, sesion.duracion, sesion.puntaje, sesion.aciertos, sesion.errores, sesion.id_intento)) 
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()

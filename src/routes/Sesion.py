@@ -37,9 +37,11 @@ def add_sesion():
         fecha = request.json.get('fecha')
         duracion = request.json.get('duracion')
         puntaje = request.json.get('puntaje')
+        aciertos = request.json.get('aciertos')
+        errores = request.json.get('errores')
 
         # Validar que los campos no sean nulos
-        if id_paciente is None or fecha is None or duracion is None or puntaje is None:
+        if id_paciente is None or fecha is None or duracion is None or puntaje is None or aciertos is None or errores is None:
             return jsonify({'message': 'Todos los campos son obligatorios'}), 400
 
         # Validar tipo de dato y longitud
@@ -49,8 +51,12 @@ def add_sesion():
             return jsonify({'message': 'La duración debe ser una cadena de texto de máximo 10 caracteres'}), 400
         if not isinstance(puntaje, int):
             return jsonify({'message': 'El puntaje debe ser un valor entero'}), 400
+        if not isinstance(aciertos, int):
+            return jsonify({'message': 'El aciertos debe ser un valor entero'}), 400
+        if not isinstance(errores, int):
+            return jsonify({'message': 'El errores debe ser un valor entero'}),
 
-        sesion = Sesion(None, id_paciente, fecha, duracion, puntaje)
+        sesion = Sesion(None, id_paciente, fecha, duracion, puntaje, aciertos, errores)
         affected_rows = SesionModel.add_sesion(sesion)
         return jsonify({'affected_rows': affected_rows})
     except Exception as ex:
@@ -64,6 +70,8 @@ def update_sesion(id_intento):
         fecha = request.json.get('fecha')
         duracion = request.json.get('duracion')
         puntaje = request.json.get('puntaje')
+        aciertos = request.json.get('aciertos')
+        errores = request.json.get('errores')
 
         # Validar que los campos no sean nulos
         if id_paciente is None or fecha is None or duracion is None or puntaje is None:
@@ -76,8 +84,12 @@ def update_sesion(id_intento):
             return jsonify({'message': 'La duración debe ser una cadena de texto de máximo 10 caracteres'}), 400
         if not isinstance(puntaje, int):
             return jsonify({'message': 'El puntaje debe ser un valor entero'}), 400
+        if not isinstance(aciertos, int):
+            return jsonify({'message': 'El aciertos debe ser un valor entero'}), 400
+        if not isinstance(errores, int):
+            return jsonify({'message': 'El errores debe ser un valor entero'}), 400
 
-        sesion = Sesion(id_intento, id_paciente, fecha, duracion, puntaje)
+        sesion = Sesion(id_intento, id_paciente, fecha, duracion, puntaje, aciertos, errores)
         affected_rows = SesionModel.update_sesion(sesion)
         if affected_rows == 1:
             return jsonify({'nui_paciente': sesion.id_intento, 'message': 'Sesion updated successfully'}), 200
