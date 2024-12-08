@@ -37,6 +37,21 @@ class TerapeutaModel:
         except Exception as ex:
             raise Exception(ex)
         
+    @classmethod
+    def get_terapeuta_by_nui(self, nui):
+        try:
+            connection = get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM terapeuta WHERE nui = %s", (nui,))  
+                row = cursor.fetchone()
+                terapeuta=None
+                if row != None:
+                    terapeuta = Terapeuta(row[0], row[1], row[2], row[3], row[4], row[5], row[6]) 
+                    terapeuta = terapeuta.to_JSON()
+            connection.close()
+            return terapeuta
+        except Exception as ex:
+            raise Exception(ex)
 
     @classmethod
     def add_terapeuta(self, terapeuta):
