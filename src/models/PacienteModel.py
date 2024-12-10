@@ -49,8 +49,10 @@ class PacienteModel:
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO paciente (id_terapeuta, nui, nombre, apellido, edad, direccion, estado) VALUES (%s,%s, %s, %s, %s, %s, %s)", (
-                    paciente.id_terapeuta, paciente.nui, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion, paciente.estado))
+                cursor.execute(
+                    "INSERT INTO paciente (id_terapeuta, nui, nombre, apellido, edad, direccion) VALUES (%s, %s, %s, %s, %s, %s)", 
+                    (paciente.id_terapeuta, paciente.nui, paciente.nombre, paciente.apellido, paciente.edad, paciente.direccion)
+                )
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
