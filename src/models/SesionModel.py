@@ -2,7 +2,28 @@ from database.db import get_connection
 from .entities.Sesion import Sesion
 
 class SesionModel:
-    
+    @classmethod
+    def get_sesiones_by_paciente(self, id_paciente):
+        try:
+            connection = get_connection()
+            sesiones = []
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT id_intento, id_paciente, fecha, duracion, puntaje "
+                    "FROM sesion WHERE id_paciente = %s ORDER BY id_intento ASC",
+                    (id_paciente,)
+                )
+                resultset = cursor.fetchall()
+
+                for row in resultset:
+                    sesion = Sesion(row[0], row[1], row[2], str(row[3]), row[4])
+                    sesiones.append(sesion.to_JSON())
+            connection.close()
+            return sesiones
+        except Exception as ex:
+            raise Exception(ex)
+
+
     @classmethod
     def get_sesiones(self):
         try:
