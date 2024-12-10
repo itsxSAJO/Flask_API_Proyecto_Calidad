@@ -40,10 +40,9 @@ def add_paciente():
         apellido = request.json.get('apellido')
         edad = request.json.get('edad')
         direccion = request.json.get('direccion')
-        estado = request.json.get('estado')
 
         # Validar que los campos no sean nulos
-        if id_terapeuta is None or nui is None or nombre is None or apellido is None or edad is None or direccion is None or estado is None:
+        if id_terapeuta is None or nui is None or nombre is None or apellido is None or edad is None or direccion is None:
             return jsonify({'message': 'Todos los campos son obligatorios'}), 400
 
         # Validar tipo de dato y longitud
@@ -59,18 +58,16 @@ def add_paciente():
             return jsonify({'message': 'La edad debe ser un valor numérico entero'}), 400
         if not isinstance(direccion, str) or len(direccion) > 100:
             return jsonify({'message': 'La dirección debe ser una cadena de texto de máximo 100 caracteres'}), 400
-        if not isinstance(estado, bool):
-            return jsonify({'message': 'El estado debe ser un valor booleano (true o false)'}), 400
 
-        paciente = Paciente(None, id_terapeuta, nui, nombre,
-                            apellido, edad, direccion, estado)
+        paciente = Paciente(None, id_terapeuta, nui, nombre, apellido, edad, direccion)
         affected_rows = PacienteModel.add_paciente(paciente)
         if affected_rows == 1:
             return jsonify({'nui': paciente.nui, 'message': 'Paciente añadido correctamente'}), 200
         else:
-            return jsonify({'message': 'Error on insert'}), 500
+            return jsonify({'message': 'Error al insertar el paciente'}), 500
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
+
 
 
 @main.route('/update/<id>', methods=['PUT'])
