@@ -8,6 +8,16 @@ from models.SesionModel import SesionModel
 
 main = Blueprint('sesion_blueprint', __name__)
 
+@main.route('/pacientes/<id_paciente>', methods=['GET'])
+def get_sesiones_by_paciente(id_paciente):
+    try:
+        sesiones = SesionModel.get_sesiones_by_paciente(id_paciente)
+        if sesiones:
+            return jsonify(sesiones), 200
+        else:
+            return jsonify({'message': 'No sessions found for the given patient ID'}), 404
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
 
 @main.route('/')
 def get_sesiones():
