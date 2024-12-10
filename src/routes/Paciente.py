@@ -12,7 +12,8 @@ main = Blueprint('paciente_blueprint', __name__)
 @main.route('/')
 def get_pacientes():
     try:
-        pacientes = PacienteModel.get_pacientes()
+        id_terapeuta = request.args.get('id_terapeuta')  # Obtener el id_terapeuta del query string
+        pacientes = PacienteModel.get_pacientes(id_terapeuta)
         return jsonify(pacientes)
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500

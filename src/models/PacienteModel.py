@@ -5,13 +5,16 @@ from .entities.Paciente import Paciente
 class PacienteModel:
 
     @classmethod
-    def get_pacientes(self):
+    def get_pacientes(self, id_terapeuta):
         try:
             connection = get_connection()
             pacientes = []
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT id, id_terapeuta, nui, nombre, apellido, edad, direccion, estado FROM paciente ORDER BY apellido ASC")
+                    "SELECT id, id_terapeuta, nui, nombre, apellido, edad, direccion, estado "
+                    "FROM paciente "
+                    "WHERE id_terapeuta = %s "
+                    "ORDER BY apellido ASC", (id_terapeuta,))
                 resultset = cursor.fetchall()
 
                 for row in resultset:
@@ -22,7 +25,7 @@ class PacienteModel:
             return pacientes
         except Exception as ex:
             raise Exception(ex)
-
+        
     @classmethod
     def get_paciente(self, id):
         try:
