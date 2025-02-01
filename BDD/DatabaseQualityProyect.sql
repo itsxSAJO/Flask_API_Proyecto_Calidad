@@ -5,8 +5,8 @@ CREATE TABLE public.terapeuta (
     nombre VARCHAR(20),
     apellido VARCHAR(20),
     especialidad VARCHAR(100),
-    estado BOOLEAN NOT NULL,
-    contrasena VARCHAR
+    estado BOOLEAN NOT NULL DEFAULT true,
+    contrasena VARCHAR NOT NULL
 );
 
 -- Tabla: paciente
@@ -18,7 +18,7 @@ CREATE TABLE public.paciente (
     edad INTEGER,
     direccion VARCHAR(100),
     id_terapeuta INTEGER NOT NULL REFERENCES public.terapeuta(id) ON DELETE CASCADE,
-    estado BOOLEAN NOT NULL
+    estado BOOLEAN NOT NULL DEFAULT true
 );
 
 -- Tabla: sesion
@@ -27,7 +27,9 @@ CREATE TABLE public.sesion (
     id_paciente INTEGER NOT NULL REFERENCES public.paciente(id) ON DELETE CASCADE,
     fecha DATE NOT NULL,
     duracion TIME NOT NULL,
-    puntaje INTEGER
+    puntaje INTEGER,
+    aciertos INTEGER DEFAULT 0,
+    errores INTEGER DEFAULT 0
 );
 
 -- Insertar datos en la tabla terapeuta
@@ -46,10 +48,10 @@ INSERT INTO public.paciente (nui, nombre, apellido, edad, direccion, id_terapeut
 ('0102112345', 'Luisa', 'Vargas', 35, 'Calle Jose Marti 789', 4, true),
 ('0102123456', 'Carlos', 'Mendez', 28, 'Calle 2, Guayaquil', 5, true);
 
--- Insertar datos en la tabla sesion
-INSERT INTO public.sesion (id_paciente, fecha, duracion, puntaje) VALUES
-(1, '2024-11-01', '00:45:00', 80),
-(2, '2024-11-02', '01:00:00', 90),
-(3, '2024-11-03', '00:30:00', 70),
-(4, '2024-11-04', '01:15:00', 85),
-(5, '2024-11-05', '00:50:00', 88);
+-- Insertar datos en la tabla sesion (se añaden valores para aciertos y errores)
+INSERT INTO public.sesion (id_paciente, fecha, duracion, puntaje, aciertos, errores) VALUES
+(1, '2024-11-01', '00:45:00', 80, 15, 5),
+(2, '2024-11-02', '01:00:00', 90, 18, 2),
+(3, '2024-11-03', '00:30:00', 70, 12, 8),
+(4, '2024-11-04', '01:15:00', 85, 16, 4),
+(5, '2024-11-05', '00:50:00', 88, 17, 3);
