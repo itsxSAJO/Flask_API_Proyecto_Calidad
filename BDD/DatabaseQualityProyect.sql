@@ -18,7 +18,7 @@ CREATE TABLE public.paciente (
     edad INTEGER,
     direccion VARCHAR(100),
     id_terapeuta INTEGER NOT NULL REFERENCES public.terapeuta(id) ON DELETE CASCADE,
-    estado BOOLEAN NOT NULL
+    estado BOOLEAN NOT NULL DEFAULT true
 );
 
 -- Tabla: sesion
@@ -27,7 +27,9 @@ CREATE TABLE public.sesion (
     id_paciente INTEGER NOT NULL REFERENCES public.paciente(id) ON DELETE CASCADE,
     fecha DATE NOT NULL,
     duracion TIME NOT NULL,
-    puntaje INTEGER
+    puntaje INTEGER,
+    aciertos INTEGER DEFAULT 0,
+    errores INTEGER DEFAULT 0
 );
 
 -- Insertar datos en la tabla terapeuta
